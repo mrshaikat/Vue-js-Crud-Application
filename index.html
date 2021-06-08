@@ -67,7 +67,7 @@
 									<td>
 										<a class="btn btn-sm btn-info" href="#">View</a>
 										<a class="btn btn-sm btn-warning" href="#">Edit</a>
-										<a class="btn btn-sm btn-danger" href="#">Delete</a>
+										<a @click="deleteUser(user.id, $event)" class="btn btn-sm btn-danger" href="#">Delete</a>
 									</td>
 								</tr>
 								
@@ -146,8 +146,41 @@
 						root.getAllusers();
 					});
 					}
+				},
+
+
+
+				//Delete User Data
+
+				deleteUser: function(id, event){
+					 event.preventDefault();
+
+					 let con = confirm('Are you sure ?');
+
+					 if(con){
+						axios.get('inc/delete.php?id='+id).then(function(response){
+							console.log(response.data);
+							root.getAllusers();
+						});
+					 }else{
+						 alert('Your Data SAVE');
+					 }
 				}
+
+
+
+
 			},
+
+
+
+
+
+
+
+
+
+
 
 
 			created:function(){
