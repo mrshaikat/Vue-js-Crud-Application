@@ -71,6 +71,7 @@
 	<script src="assets/js/bootstrap.min.js"></script>
 
 	<!-- Vue Js load -->
+	<script src="assets/js/axios.min.js"></script>
 	<script src="assets/js/vue.min.js"></script>
 	<script src="assets/js/vue-router.js"></script>
 
@@ -80,15 +81,22 @@
 			data: {
 				users: []
 			 },
+
+
 			methods: {
-				
+				getAllusers: function(){
+					axios.get('inc/data.php').then(function(response){
+						
+						root.users = response.data;
+					});
+				}
 			},
+
+
 			created:function(){
-
+				this.getAllusers();
 			},
-			mounted:function(){
-
-			}
+			
 		});
 
 		Vue.config.devtools = true
