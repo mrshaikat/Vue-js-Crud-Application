@@ -106,9 +106,9 @@
 			data: {
 				users: [],
 				user: {
-					name:null,
-					email:null,
-					cell:null,
+					name:"",
+					email:"",
+					cell:"",
 				}
 			 },
 
@@ -126,7 +126,12 @@
 				//Add new user
 				addNewUser: function(){
 					
-					axios.post('inc/add.php', {
+					if(root.user.name == "" || root.user.email == "" || root.user.cell == ""){
+
+						alert("All filds are Required !!");
+
+					}else{
+						axios.post('inc/add.php', {
 						name: root.user.name,
 						email: root.user.name,
 						cell: root.user.cell
@@ -140,6 +145,7 @@
 
 						root.getAllusers();
 					});
+					}
 				}
 			},
 
