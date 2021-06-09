@@ -34,6 +34,10 @@
 					</div>
 
 					<div class="form-group">
+						<input class="form-control" ref="file" type="file">
+					</div>
+
+					<div class="form-group">
 						<input @click="addNewUser" class="btn btn-primary btn-sm" type="submit" value="Submit">
 					</div>
 				
@@ -63,9 +67,9 @@
 									<td>{{ user.name }}</td>
 									<td>{{ user.email }}</td>
 									<td>{{user.cell  }}</td>
-									<td><img src="assets/media/img/pp_photo/istockphoto-615279718-612x612.jpg" alt=""></td>
+									<td><img :src="'photo/users/'+user.photo" alt="Images"></td>
 									<td>
-										<a class="btn btn-sm btn-info" href="#">View</a>
+										<a @click="singleUserProfile(user.id)" class="btn btn-sm btn-info" data-toggle="modal" href="#single_user">View</a>
 										<a class="btn btn-sm btn-warning" href="#">Edit</a>
 										<a @click="deleteUser(user.id, $event)" class="btn btn-sm btn-danger" href="#">Delete</a>
 									</td>
@@ -79,9 +83,44 @@
 			</div>
 		</div>
 	</div>
-	
 
-	
+
+	<!-- Single User Modal -->
+	<div id="single_user" class="modal fade">
+		<div class="modal-dialog modal-dialog-center">
+			<div class="modal-content">
+				<div class="modal-header">
+				   
+				   <button style="background-color: red;" class="close" data-dismiss="modal">&times;</button>
+				</div>	
+				<div class="modal-body">
+					<img class=" shadow" style="width: 200px; height: 200px; border: 10px solid #FFF; border-radius: 50%; display: block; margin: auto;" :src="'photo/users/'+single_user.photo" alt="Single_User_photo">
+					<h2>{{ single_user.name }}</h2>
+   
+					<table class="table table-striped">
+						<tr>
+							<td>Name</td>
+							<td>{{ single_user.name }}</td>
+						</tr>
+   
+						<tr>
+							<td>E-mail</td>
+							<td>{{ single_user.email }}</td>
+					   </tr>
+   
+					   <tr>
+						<td>Cell</td>
+						<td>{{ single_user.cell }}</td>
+					   </tr>
+   
+					   
+					</table>
+				</div>
+			   
+			</div>
+		</div>
+	</div>
+
  </div>
 
 
@@ -109,6 +148,14 @@
 					name:"",
 					email:"",
 					cell:"",
+					photo:"",
+				},
+				single_user: {
+
+					name: '',
+					email: '',
+					cell: '',
+					photo: ''
 				}
 			 },
 
@@ -131,12 +178,29 @@
 						alert("All filds are Required !!");
 
 					}else{
-						axios.post('inc/user.php?action=create', {
-						name: root.user.name,
-						email: root.user.name,
-						cell: root.user.cell
 
-					}).then(function(response){
+						// Get file data
+						this.user.photo = root.$refs.file.files[0];
+
+
+
+
+
+						let userData = new FormData();
+
+						userData.append('name', this.user.name);
+						userData.append('email', this.user.email);
+						userData.append('cell', this.user.cell);
+						userData.append('photo', this.user.photo);
+
+
+						axios.post('inc/user.php?action=create', userData, {
+
+							header: {
+								'Content-Type' : 'multipart/form-data'
+							}
+
+						}).then(function(response){
 						console.log(response.data);
 
 						root.user.name = null;
@@ -165,7 +229,28 @@
 					 }else{
 						 alert('Your Data SAVE');
 					 }
-				}
+				},
+
+
+				//View Show Single User
+
+				singleUserProfile: function(id){
+					 
+
+				
+						axios.get('inc/user.php?action=single&id='+id).then(function(response){
+							console.log(response.data);
+							
+							root.single_user.name = response.data.name;
+							root.single_user.email = response.data.email;
+							root.single_user.cell = response.data.cell;
+							root.single_user.photo = response.data.photo;
+							
+						});
+					
+				},
+
+
 
 
 

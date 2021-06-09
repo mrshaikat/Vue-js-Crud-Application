@@ -33,13 +33,25 @@ if ($action == 'read') {
 /**
  * Create all user data
  */
+
 if ($action == 'create') {
-    $name = $data->name;
-    $email = $data->email;
-    $cell = $data->cell;
+
+    // $name = $data->name;
+    // $email = $data->email;
+    // $cell = $data->cell;
+
+    $photo_name = $_FILES['photo']['name'];
+    $photo_tmpname = $_FILES['photo']['tmp_name'];
+
+    //Profile Upload 
+    move_uploaded_file($photo_tmpname, '../photo/users/' . $photo_name);
+
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $cell = $_POST['cell'];
 
 
-    $conn->query("INSERT INTO users_info(name, email, cell) VALUES('$name', '$email', '$cell')");
+    $conn->query("INSERT INTO users_info(name, email, cell, photo) VALUES('$name', '$email', '$cell', '$photo_name')");
 }
 
 
@@ -50,9 +62,26 @@ if ($action == 'create') {
  * Delete user data
  */
 if ($action == 'delete') {
-
+    //get user id
     $id = $_GET['id'];
 
 
     $conn->query("DELETE FROM users_info WHERE id = '$id' ");
+}
+
+
+
+/**
+ * View Single user data
+ */
+if ($action == 'single') {
+    //get user id
+    $id = $_GET['id'];
+
+
+    $data = $conn->query("SELECT * FROM users_info WHERE id = '$id' ");
+
+    $single_user_data = $data->fetch_assoc();
+
+    echo json_encode($single_user_data);
 }
