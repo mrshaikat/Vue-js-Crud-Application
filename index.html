@@ -117,7 +117,7 @@
 
 				//Get allusers
 				getAllusers: function(){
-					axios.get('inc/data.php').then(function(response){
+					axios.get('inc/user.php?action=read').then(function(response){
 						
 						root.users = response.data;
 					});
@@ -131,7 +131,7 @@
 						alert("All filds are Required !!");
 
 					}else{
-						axios.post('inc/add.php', {
+						axios.post('inc/user.php?action=create', {
 						name: root.user.name,
 						email: root.user.name,
 						cell: root.user.cell
@@ -158,7 +158,7 @@
 					 let con = confirm('Are you sure ?');
 
 					 if(con){
-						axios.get('inc/delete.php?id='+id).then(function(response){
+						axios.get('inc/user.php?action=delete&id='+id).then(function(response){
 							console.log(response.data);
 							root.getAllusers();
 						});
