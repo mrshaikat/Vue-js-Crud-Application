@@ -85,3 +85,26 @@ if ($action == 'single') {
 
     echo json_encode($single_user_data);
 }
+
+
+
+
+/**
+ * Search user data
+ */
+if ($action == 'search') {
+    //get user id
+    $search = $_GET['s'];
+
+    $data = $conn->query("SELECT * FROM users_info WHERE name LIKE '%$search%' ");
+
+    $search_result = [];
+
+    while($result = $data->fetch_assoc() ){
+        array_push($search_result, $result);
+    }
+
+    echo json_encode($search_result);
+
+
+}
